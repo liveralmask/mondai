@@ -8,7 +8,7 @@
 
 <div>
 <text>※上記サイトの問題を参考に計算プログラムを作ってみました。</text><br />
-<text>　ですが、他の人の計算結果と違っているところが多々あるので、ミスってる可能性があります。<text><br />
+<text>　ですが、全ての条件で確認していないので、無駄な組み合わせを表示している可能性があります。<text><br />
 <text>　また、いつまでも計算し続けると困るので、</text><br />
 <text>　計算結果が<%= @max_count %>回を超えたり、計算時間が<%= @max_sec %>秒を超えたら、停止するようにしてあります。<text>
 </div>
@@ -36,6 +36,7 @@
 <% end %>
 
 <div class="priclu-table">
+	<text>ver.<%= @version %></text><br />
 	<text>計算時間=<%= sprintf( "%f", @result[ :realtime ] ) %>(秒)</text><br />
 	<text>計算結果=<%= @result[ :fixed_members ].length %>回</text>
 	

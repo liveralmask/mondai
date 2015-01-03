@@ -29,7 +29,8 @@ class PricluController < ApplicationController
 	end
 	
 	def index
-		@title = "プリクラ#{@title}"
+		@title		= "プリクラ#{@title}"
+		@version	= "2"
 		
 		@max_count	= 10000
 		@max_sec	= 10
@@ -48,21 +49,40 @@ class PricluController < ApplicationController
 		error = nil
 		@start_time = Time.now
 		result = Benchmark.realtime do
-			while 0 < targets.length
-				if @max_sec <= ( Time.now - @start_time )
-					error = "#{@max_sec}秒オーバー"
-					break
+			if @input.m <= 1
+				targets.each{|target|
+					fixed_members.push [ target ]
+				}
+			elsif @input.n <= @input.m
+				fixed_members.push targets
+			else
+				# 最初のメンバーと全メンバーを組み合わせ、最初のメンバーを対象外にする
+				first_member = targets.shift
+				targets.each_slice( @input.m - 1 ).to_a.each{|members|
+					members.unshift( first_member )
+					( @input.m - members.length ).times{|i|
+						members.push targets[ i ]
+					}
+					
+					fixed_members.push members
+					add_members( targets, members, @input.n )
+				}
+				
+				while 0 < targets.length
+					if @max_sec <= ( Time.now - @start_time )
+						error = "#{@max_sec}秒オーバー"
+						break
+					elsif @max_count <= fixed_members.length
+						error = "#{@max_count}回オーバー"
+						break
+					end
+					
+					members = get_members( targets, @input.m )
+					
+					fixed_members.push members
+					
+					add_members( targets, members, @input.n )
 				end
-				
-				members = get_members( targets, @input.m )
-				
-				fixed_members.push members
-				if @max_count <= fixed_members.length
-					error = "#{@max_count}回オーバー"
-					break
-				end
-				
-				add_members( targets, members, @input.n )
 			end
 		end
 		
@@ -75,24 +95,32 @@ class PricluController < ApplicationController
 	
 protected
 	def get_members( targets, num )
-		members = [ targets.shift ]
+		members = []
 		
-		targets.length.times{
-			target = targets.shift
-			
-			if members[ 0 ][ :members ].key?( target[ :no ] )
-				targets.push target
-				next
-			end
-			
-			members.push target
-			break if num == members.length
-		}
-		
-		if members.length < num
-			targets.length.times{
-				members.push targets.shift
+		if targets.length <= num
+			targets.each{|target|
+				members.push target
+			}
+		else
+			indexes = []
+			targets.length.times{|i|
+				target = targets[ i ]
+				
+				members.each{|member|
+					if member[ :members ].key?( target[ :no ] )
+						indexes.push i
+						target = nil
+						break
+					end
+				}
+				next if target.nil?
+				
+				members.push target
 				break if num == members.length
+			}
+			
+			( num - members.length ).times{|i|
+				members.push targets[ indexes[ i ] ]
 			}
 		end
 		
@@ -109,8 +137,8 @@ protected
 		members.each{|member|
 			add_member( member, members )
 			
-			# 全メンバーと組んでいないメンバーを対象に戻す
-			targets.push member if member[ :members ].length < max
+			# 全メンバーと組んだメンバーを対象から外す
+			targets.delete( member ) if member[ :members ].length == max
 		}
 	end
 end
