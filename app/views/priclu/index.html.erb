@@ -1,17 +1,42 @@
-<div class="priclu">
+<div>
+<%= link_to "Twitter#プリクラ問題", "https://twitter.com/hashtag/%E3%83%97%E3%83%AA%E3%82%AF%E3%83%A9%E5%95%8F%E9%A1%8C?f=realtime&src=hash", { :target => "_blank" } %>
+</div>
+
+<div>
+<%= link_to "Togetter#プリクラ問題", "http://togetter.com/li/765312", { :target => "_blank" } %>
+</div>
+
+<div>
+<text>※上記サイトの問題を参考に計算プログラムを作ってみました。</text><br />
+<text>　ですが、他の人の計算結果と違っているところが多々あるので、ミスってる可能性があります。<text><br />
+<text>　また、いつまでも計算し続けると困るので、</text><br />
+<text>　計算結果が<%= @max_count %>回を超えたり、計算時間が<%= @max_sec %>秒を超えたら、停止するようにしてあります。<text>
+</div>
+
+<div>
 	<%= form_tag( "/priclu", :method => "get" ) do %>
 		<%= label_tag "input[n]", "n=" %>
-		<%= text_field :input, :n, :size => "10x10", :maxlength => "5" %><br />
+		<%= text_field :input, :n, :size => "10x10", :maxlength => 4 %>
+		<text>(最大4桁)</text>
+		<br />
 		
 		<%= label_tag "input[m]", "m=" %>
-		<%= text_field :input, :m, :size => "10x10", :maxlength => "5" %><br />
+		<%= text_field :input, :m, :size => "10x10", :maxlength => 4 %>
+		<text>(最大4桁)</text>
+		<br />
 		
 		<%= submit_tag "計算", :class => "priclu-submit" %>
 	<% end %>
 </div>
 
+<% if ! @result[ :error ].nil? %>
+<div>
+<text class="priclu-error"><%= @result[ :error ] %></text>
+</div>
+<% end %>
+
 <div class="priclu-table">
-	<text>実行時間=<%= sprintf( "%f", @result[ :realtime ] ) %>(秒)</text><br />
+	<text>計算時間=<%= sprintf( "%f", @result[ :realtime ] ) %>(秒)</text><br />
 	<text>計算結果=<%= @result[ :fixed_members ].length %>回</text>
 	
 	<ul class="priclu-table">
@@ -26,12 +51,4 @@
 		<li class="priclu-table"><%= numbers.join( " " ) %></li>
 	</ul>
 	<% } %>
-</div>
-
-<div class="priclu">
-<%= link_to "Twitter#プリクラ問題", "https://twitter.com/hashtag/%E3%83%97%E3%83%AA%E3%82%AF%E3%83%A9%E5%95%8F%E9%A1%8C?f=realtime&src=hash", { :target => "_blank" } %>
-</div>
-
-<div class="priclu">
-<%= link_to "Togetter#プリクラ問題", "http://togetter.com/li/765312", { :target => "_blank" } %>
 </div>
