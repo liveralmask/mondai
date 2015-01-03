@@ -1,0 +1,29 @@
+// Place all the styles related to the menu controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+div.table {
+}
+
+ul.table {
+	display:				table;
+	table-layout:			fixed;
+	width:					480px;
+	
+	list-style-type:		none;
+	
+	margin:					0px;
+	padding:				0px;
+	border-collapse:		collapse;
+}
+
+li.table {
+	display:				table-cell;
+	
+	vertical-align:			center;
+	text-align:				center;
+	
+	margin:					0px;
+	padding:				5px;
+	border:					1px solid #000000;
+}

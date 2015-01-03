@@ -1,0 +1,13 @@
+<div class="table">
+	<ul class="table">
+		<li class="table">名称</li>
+		<li class="table">概要</li>
+	</ul>
+	
+	<% @mondais.each{|mondai| %>
+	<ul class="table">
+		<li class="table"><%= link_to "#{mondai[ :name ]}", "/#{mondai[ :name ]}" %></li>
+		<li class="table"><%= "#{mondai[ :summary ]}" %></li>
+	</ul>
+	<% } %>
+</div>

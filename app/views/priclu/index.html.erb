@@ -1,0 +1,37 @@
+<div class="priclu">
+	<%= form_tag( "/priclu", :method => "get" ) do %>
+		<%= label_tag "input[n]", "n=" %>
+		<%= text_field :input, :n, :size => "10x10", :maxlength => "5" %><br />
+		
+		<%= label_tag "input[m]", "m=" %>
+		<%= text_field :input, :m, :size => "10x10", :maxlength => "5" %><br />
+		
+		<%= submit_tag "計算", :class => "priclu-submit" %>
+	<% end %>
+</div>
+
+<div class="priclu-table">
+	<text>実行時間=<%= sprintf( "%f", @result[ :realtime ] ) %>(秒)</text><br />
+	<text>計算結果=<%= @result[ :fixed_members ].length %>回</text>
+	
+	<ul class="priclu-table">
+		<li class="table">回数(人数)</li>
+		<li class="table">番号</li>
+	</ul>
+	
+	<% @result[ :fixed_members ].each_with_index{|members, i| %>
+	<ul class="priclu-table">
+		<li class="priclu-table"><%= i + 1 %>回目(<%= members.length %>人)</li>
+		<% numbers = members.collect{|member| member[ :no ]} %>
+		<li class="priclu-table"><%= numbers.join( " " ) %></li>
+	</ul>
+	<% } %>
+</div>
+
+<div class="priclu">
+<%= link_to "Twitter#プリクラ問題", "https://twitter.com/hashtag/%E3%83%97%E3%83%AA%E3%82%AF%E3%83%A9%E5%95%8F%E9%A1%8C?f=realtime&src=hash", { :target => "_blank" } %>
+</div>
+
+<div class="priclu">
+<%= link_to "Togetter#プリクラ問題", "http://togetter.com/li/765312", { :target => "_blank" } %>
+</div>
